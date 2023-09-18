@@ -19,7 +19,9 @@ console.log(user);
 function fetchUser(){
     return new Promise((resolve, reject) => {
         // do network request in 10 secs...
-        resolve('ellie');
+        resolve('ellie');   
+        // resolve 없이 return 시에는 console에 찍었을 때 pending으로 나타난다.(state: pending, result: undefined)
+        // resolve를 적어주면, state: fulfilled, result: ellie
     });
 }
 user = fetchUser();
@@ -51,6 +53,11 @@ async function getBanana() {
    await delay(1000);
    return '🍌';
 }
+// 동일한 getBanana() 함수지만 promise를 사용하는 함수로 만들면,
+function getBanana() {
+    return delay(3000)
+    .then(()=> '🍌');
+}
 
 // 사과와 바나나를 모두 가져오는 함수를 promise로 만든다면?
 function pickFruits() {
@@ -69,17 +76,21 @@ async function pickFruits(){
 }
 pickFruits().then(console.log);
 
+// 다만 1초 기다려서 애플을 가져온 뒤 다시 1초를 기다려서 바나나를 가져오는 과정은,
+// 두 과정이 서로 연관이 없는 과정이기 때문에 비효율적이다.
 
 async function pickFruits() {
-    const applePromise = getApple();
-    const bananaPromise = getBanana();
-    const apple = await applePromise;
-    const banana = await bananaPromise;
+    const applePromise = getApple();    // Promise는 만드는 순간 실행됨
+    const bananaPromise = getBanana();  // 따라서 Promise를 먼저 만들고
+    const apple = await applePromise;   // < 이와 같이 작성함으로써
+    const banana = await bananaPromise; // 병렬 실행이 가능해짐
     return `${apple} + ${banana}`;
 }
 pickFruits().then(console.log);
   
 // 3. useful APIs ✨
+// Promise의 all() API
+// Promise에 배열을 전달하게 되면 모든 Promise들이 병렬적으로 다 받을 때까지 모아준다
 function pickAllFruits() {
     return Promise.all([getApple(), getBanana()]).then(fruits =>
         fruits.join(' + ')
@@ -87,6 +98,8 @@ function pickAllFruits() {
 }
 pickAllFruits().then(console.log);
   
+// Promise의 race() API
+// Promise에 배열을 전달하면, 그 중 가장 빨리 값을 전달하는 Promise 값만 전달 
 function pickOnlyOne() {
     return Promise.race([getApple(), getBanana()]);
 }  
