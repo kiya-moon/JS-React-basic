@@ -115,7 +115,7 @@ coolCounter2.increase();
 coolCounter2.increase();
 coolCounter2.increase();
 coolCounter2.increase();
-coolCounter2.increase();
+coolCounter2.increase(); 
 
 
 // 하나의 클래스로 다양한 오브젝트를 만들어
