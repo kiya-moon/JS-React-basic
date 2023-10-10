@@ -7,15 +7,21 @@ import reportWebVitals from './reportWebVitals';
 // import 추가
 import Library from './chapter_03/Library';
 import Clock from './chapter_04/Clock';
+import CommentList from './chapter_05/Comment_list';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-setInterval(() => {
-  root.render(
-    <React.StrictMode>
-      <Clock />
-    </React.StrictMode>
-  );
-}, 1000);
+// setInterval(() => {
+//   root.render(
+//     <React.StrictMode>
+//       <Clock />
+//     </React.StrictMode>
+//   );
+// }, 1000);
+root.render(
+  <React.StrictMode>
+    <CommentList />
+  </React.StrictMode>
+);
 
 // // 왜 선생님이랑 다르지...? 버전이 달라서인가...? >>> ㅇㅇ
 // const root = ReactDOM.createRoot(document.getElementById('root'));
