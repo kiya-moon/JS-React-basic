@@ -653,5 +653,372 @@ ex. const element = <h1>Hello, world!</h1>;
 	> Lifecycle : 리액트 Component의 생명주기
 	- Mounting(출생) ~ Updating(인생) ~ Unmounting(사망)
 	- Component는 계속 존재하는 것이 아니라, 시간의 흐름에 따라 생성되고 업데이트 되다가 사라진다(더 이상 상위 컴포넌트가 현재 컴포넌트를 화면에 표시하지 않을 때)
-	- 함수 컴포넌트도 이런 생명주기를 갖는다
+	- 함수 컴포넌트도 이런 흐름을 갖는다
 
+16. Hooks
+	> 리액트 16.8 버전에서 새롭게 등장한 개념
+	> Class Component는 생성자에서 state를 정의하고, setState() 함수를 통해 state를 업데이트하며, 컴포넌트의 생명주기와 관련된 Lifecycle Methods가 모두 명확하게 정의되어 있기 때문에 잘 가져다 사용만 하면 되었음
+	> Function Component는 Class Component와 다르게 코드도 굉장히 간결하고 별도로 state를 정의해서 사용하거나 컴포넌트의 생명주기에 맞춰 어떤 코드가 실행되도록 할 수 없음
+	> Function Component에 이런 단점을 지원하기 위해서 나온 것이 Hooks!
+	> 훅을 사용하면 함수 컴포넌트에서도 클래스 컴포넌트의 기능을 구현할 수 있다.
+
+	> Hooks은 갈고리를 의미하는데, 프로그래밍에서는 원래 존재하는 어떤 기능에 마치 갈고리를 거는 것처럼 끼어들어가 같이 수행되는 것을 의미한다.
+	> 리액트의 state와 lifecycle 기능에 갈고리를 걸어 원하는 시점에 정해진 함수를 실행되도록 만든 것
+
+	> 이름은 모두 'use'로 시작된다★
+	> 개발자가 직접 커스텀 훅을 만들어서 사용할 수도 있지만 이름은 꼭 use로 시작되어야 한다.
+
+17. useState()
+	> state를 사용하기 위한 훅
+
+	> 사용법
+	
+		const [변수명, set함수명] = useState(초기값);
+	
+	- useState를 호출할 때는 파라미터로 선언할 state의 초기값이 들어간다.
+	- return 값으로는 배열이 나온다.
+	- return된 배열에는 두 가지 항목이 들어 있는데, 첫 번째 항목은 state로 선언된 변수이고, 두 번째 항목은 해당 state의 set 함수이다.
+
+	> 예제
+	- state를 사용하지 않은 카운터 컴포넌트
+		import React from "react";
+
+		function Counter(props) {
+			var count = 0;
+
+			return (
+				<div>
+					<p>총 {count}번 클릭했습니다.</p>
+					<button onClick={() => count++}>
+						클릭
+					</button>
+				</div>
+			);
+		}
+		=> count를 함수의 변수로 선언해서 사용하게 되면, 버튼 클릭 시 카운트는 올라가지만 재렌더링되지는 않아 화면에 새로운 카운트 값이 나타나지 않는다.
+
+	- useState 사용한 카운터 컴포넌트
+		import React, { useState } from "react";
+
+		function Counter(props) {
+			const [count, setCount] = useState(0);
+
+			return (
+				<div>
+					<p>총 {count}번 클릭했습니다.</p>
+					<button onClick={() => setCount(count + 1)}>
+						클릭
+					</button>
+				</div>
+			);
+		}
+
+18. useEffect()
+	> side effect를 수행하기 위한 훅
+	> side effect는 부작용이라는 의미로, 프로그래밍에서는 개발자가 의도치 않은 코드가 실행되면서 버그가 나타나면 사이드 이펙트가 발생했다고 말한다. 하지만 리액트에서의 side effect는 부정적인 의미가 아닌 효과 혹은 영향을 뜻하는 effect의 의미에 가깝다. 예를 들면 서버에서 데이터를 받아오거나 수동으로 DOM을 변경하는 등의 작업을 가리키는데, 이 작업들은 다른 컴포넌트에 영향을 미칠 수 있으며 렌더링 중에는 작업이 완료될 수 없다(렌더링이 끝나야 실행될 수 있음). 그래서 이러한 작업들이 사이드로 실행된다는 의미에서 사이드 이펙트라 불린다.
+	> useEffect는 클래스 컴포넌트에서 제공하는 생명주기 함수인 componentDidMount, componentDidUpdate, componentWillUnmount와 동일한 기능을 하나로 통합해서 제공
+
+	> 사용법 
+		useEffect(이펙트 함수, 의존성 배열);
+	- 첫 번째 파라미터로는 이펙트 함수가 들어가고, 두 번째 파라미터로는 의존성 배열이 들어간다.
+	- 의존성 배열은 말 그대로 이 이펙트가 의존하고 있는 배열인데, 배열 안에 있는 변수가 하나라도 값이 변경되면 이펙트 함수가 실행된다.
+	- 기본적으로 이펙트 함수는 처음 컴포넌트가 렌더링 된 이후와 업데이트로 인한 재렌더링 이후에 실행된다. 
+	- 만약 이펙트 함수가 mount 시와 unmount 시에 단 한 번씩만 실행되게 하고 싶으면 의존성 배열에 빈 배열을 넣으면 된다. => useEffect(이펙트 함수, []);
+	- 이렇게 하면 해당 이펙트가 props나 state에 있는 어떤 값에도 의존하지 않는 것이 되므로 여러 번 실행되지 않는다.
+	- 의존성 배열은 생략도 가능한데, 생략하게 되면 컴포넌트가 업데이트 될 때마다 호출된다. => useEffect(이펙트 함수);
+
+	> 예제
+	- componentDidMount, componentDidUpdate 기능 구현
+		import React, { useState, useEffect } from "react";
+
+		function Counter(props) {
+			const [count, setCount] = useState(0);
+
+			// componentDidMount, componentDidUpdate와 비슷하게 작동한다.
+			useEffect(() => {
+				// 브라우저 API를 사용해서 document의 title을 업데이트 한다.
+				document.title = `You clicked ${count} times`;
+			});
+
+			return (
+				<div>
+					<p>총 {count}번 클릭했습니다.</p>
+					<button onClick={() => setCount(count + 1)}>
+						클릭
+					</button>
+				</div>
+			);
+		}
+		=> 의존성 배열 없이 useEffect를 사용하면 리액트는 DOM이 변경된 후 해당 이펙트 함수를 실행하라는 의미로 받아들임
+		그래서 기본적으로 컴포넌트가 처음 렌더링 될 때(componentDidMount)를 포함해서 매번 렌더링 될 때마다(componentDidUpdate) 이펙트가 실행된다.
+		또한 이펙트는 함수 컴포넌트 안에서 선언되기 때문에 해당 컴포넌트의 props와 state에 접근할 수도 있다. 이 코드에서는 count라는 state에 접근하여 해당 값이 포함된 문자열을 생성해서 사용하는 것을 볼 수 있다.
+
+	- componentWillUnmount 기능 구현
+		import React, { useState, useEffect } from "react";
+
+		function UserStatus(props) {
+			const [isOnline, setIsOnline] = useState(null);
+
+			function handleStatusChange(status) {
+				setIsonline(status.isOnline);
+			}
+
+			useEffect(() => {
+				ServerAPI.subscribeUserStatus(props.user.id, handleStatusChange);
+				return () => {
+					ServerAPI.unsubscribeUserStatus(props.user.id, handleStatusChange);
+				};
+			});
+
+			if (isOnline === null) {
+				return '대기 중...';
+			}
+
+			return isOnline ? '온라인' : '오프라인';
+		}
+		=> 이 코드는 useEffect에서 먼저 서버 API를 사용하여 사용자의 상태를 구독하고 있음. 이후 함수를 하나 리턴하는데, 해당 함수 안에는 구독을 해지하는 api를 호출하도록 되어 있음. 즉, useEffect의 리턴 함수는 컴포넌트의 mount가 해제될 때 호출되는데, componentWillUnmount 함수의 역할과 동일하다. 
+
+	- 하나의 컴포넌트에 여러 개의 훅 사용 가능
+		import React, { useState, useEffect } from "react";
+
+		function UserStatusWithCounter(props) {
+			const [count, setCount] = useState(0);
+			useEffect(() => {
+				document.title = `총 ${count}번 클릭했습니다.`;
+			});
+
+			const [isOnline, setIsOnline] = useState(null);
+			useEffect(() => {
+				ServerAPI.subscribeUserStatus(props.user.id, handleStatusChange);
+				return () => {
+					ServerAPI.unsubscribeUserStatus(props.user.id, handleStatusChange);
+				};
+			});
+
+			function handleStatusChange(status) {
+				setIsOnline(status.isOnline);
+			}
+		}
+	
+19. useMemo() : Memoized value를 리턴하는 훅
+	> memoization : 컴퓨터분야에서 memoization은 최적화를 위해 사용하는 개념. 비용이 높은, 즉 연산량이 많은 함수의 호출 결과를 저장해 두었다가 같은 입력 값으로 함수를 호출하면 새로 함수를 호출하지 않고 이전에 저장해놨던 호출 결과를 바로 반환하는 것. 이렇게 하면 결과적으로 함수 호출 결과를 받기까지 걸리는 시간도 짧아질 뿐더러 불필요한 중복 연산도 하지 않기 때문에 컴퓨터의 자원을 적게 쓸 수 있다.
+	> memoized value : memoization된 결과 값
+
+	> 사용법
+
+		const memoizedValue = useMemo(
+			() => {
+				// 연산량이 높은 작업을 수행하여 결과를 반환
+				return computeExpensiveValue(의존성 변수1, 의존성 변수2);
+			},
+			[의존성 변수1], [의존성 변수2]
+		);
+
+	- useMemo 훅을 사용하면 컴포넌트가 다시 렌더링 될 때마다 연산량 높은 작업을 반복하는 것을 피할 수 있다 => 빠른 렌더링 속도
+
+	> useMemo로 전달된 함수는 렌더링이 일어나는 동안 실행된다. 때문에 side effect 같이 렌더링이 일어나는 동안 실행되면 안되는 작업을 useMemo의 함수에 넣으면 안된다.
+	ex. 서버에서 데이터를 받아오거나 수동으로 DOM을 변경하는 작업 등
+
+	> 의존성 배열을 넣지 않을 경우 매 렌더링마다 create 함수가 실행된다. 따라서 useMemo 훅에 의존성 배열을 넣지 않고 사용하는 것은 의미가 없다.
+	(연산량이 많은 값을 저장해놓기 위해 사용하는 훅인데, 매 렌더링 시마다 함수가 실행되면 의미가 없다는 뜻인가 보다...)
+
+		const memoizedValue = useMemo(
+			() => computeExpensiveValue(a, b)
+		);
+
+	> 의존성 배열이 빈 배열일 경우, 컴포넌트 마운트 시에만 호출 된다 => 마운트 시점에서 값을 한 번만 계산하면 되는 경우에 사용
+
+		const memoizedValue = useMemo(
+			() => {
+				return computeExpensiveValue(a, b);
+			},
+			[]
+		)
+
+	> 하지만 대부분의 경우에는 의존성 배열에 변수들을 넣고, 그 변수들이 변경될 경우 새로 값을 계산해야 하는 경우에 useMemo를 사용한다.
+
+20. useCallback()
+	> useMemo()와 유사하지만 값이 아닌 함수를 반환한다.
+	> 컴포넌트가 렌더링 될 때마다 함수를 새로 정의하는 것이 아니라 의존성 배열의 값이 바뀐 경우에만 함수를 새로 정의해서 리턴해주는 역할
+
+	> 사용법
+
+		const memoizedCallback = useCallback(
+			() => {
+				doSomething(의존성 변수1, 의존성 변수2);
+			},
+			[의존성 변수1, 의존성 변수2]
+		);
+
+	- useCallback 훅은 useMemo 훅과 마찬가지로 함수와 의존성 배열을 파라미터로 받는다.
+	- useCallback 훅에서는 파라미터로 받는 이 함수를 callback이라고 부른다.
+	
+	> 의존성 배열에 있는 변수 중 하나라도 변경되면 메모이제이션된 콜백 함수를 반환한다. 의존성 배열에 따라 메모이즈드 값을 반환한다는 점에서는 useMemo 훅과 완전히 동일하다.
+		useCallback(함수, 의존성 배열);
+		useMemo(() => 함수, 의존성 배열);
+
+	> 만약 useCallback 훅을 사용하지 않고 컴포넌트 내에 함수를 정의한다면, 매번 렌더링이 일어날 때마다 함수가 새로 정의된다. 따라서 useCallback 훅을 사용하여 특정 변수의 값이 변한 경우에만 함수를 다시 정의하도록 해서 불필요한 반복 작업을 없애준다.
+
+	- 컴포넌트 내에 함수를 정의한 경우
+		import { useState } from "react";
+
+		function ParentComponent(props) {
+			const [count, setCount] = useState(0);
+
+			// 재렌더링 될 때마다 매번 함수가 새로 정의됨
+			const handleClick = (event) => {
+				//클릭 이벤트 처리
+			};
+
+			return (
+				<div>
+					<button 
+						onClick={() => {
+							setCount(count + 1);
+						}}
+					>
+						{count}
+					</button>
+
+					<ChildComponent handleClick={handleClick} />
+				</div>
+			);
+		}
+		=> useCallback 훅을 사용하지 않고 컴포넌트 내에서 정의한 함수를 자식 컴포넌트의 props로 넘겨 사용하는 경우에 부모 컴포넌트가 재렌더링 될 때마다 자식 컴포넌트도 재렌더링된다.
+
+	- useCallback 훅 사용한 경우
+		import { useState, useCallback } from "react";
+
+		function ParentComponent(props) {
+			const [count, setCount] = useState(0);
+
+			// 컴포넌트가 마운트 될 때만 함수가 정의됨
+			const handleClick = useCallback((event) => {
+				//클릭 이벤트 처리
+			}, []);
+
+			return (
+				<div>
+					<button 
+						onClick={() => {
+							setCount(count + 1);
+						}}
+					>
+						{count}
+					</button>
+
+					<ChildComponent handleClick={handleClick} />
+				</div>
+			);
+		}
+		=> useCallback의 의존성 배열이 빈 배열로 주어졌기 때문에 컴포넌트가 마운트 될 때만 함수가 정의되고, 자식 컴포넌트도 불필요하게 재렌더링되지 않는다.
+
+21. useRef()
+	> Reference를 사용하기 위한 훅
+	> 리액트에서 레퍼런스란 특정 컴포넌트에 접근할 수 있는 객체를 의미하며, useRef 훅은 이 레퍼런스 객체를 반환한다.
+	> 이렇게 반환된 레퍼런스 객체는 컴포넌트의 라이프타임 전체에 걸쳐서 유지된다. 즉, 컴포넌트가 마운트 해제되기 전까지는 계속 유지된다.
+	
+	> 레퍼런스 객체에는 current라는 속성이 있는데 이것은 현재 레퍼런스하고 있는 엘리먼트를 의미한다 => refobject.current = 현재 참조하고 있는 Element
+
+	> 사용법
+		
+		const refContainer = useRef(초기값);
+	
+	> 예제. useRef 훅을 사용하여 버튼 클릭 시 input에 포커스를 하도록 하는 코드
+		function TextInputWithFocusButton(props) {
+			// 초기값: null
+			const inputElem = useRef(null);
+
+			// 버튼 클릭 시 호출되는 함수
+			// inputElem.current를 통해 실제 엘리먼트에 접근하여 포커스 함수를 호출
+			const onButtonClick = () => {
+				// `current`는 마운트된 input element를 가리킨다
+				inputElem.current.focus();
+			};
+
+			return (
+				<>
+					// 반환된 레퍼런스 객체 inputElem을 input 태그에 넣어줌
+					<input ref={inputElem} type="text" />
+					<button onClick={onButtonClick}>
+						Focus the input
+					</button>
+				</>
+			);
+		}
+	
+	> <div ref={myRef} />
+	- 리액트에서는 화면과 같이 코드를 작성하면 노드가 변경될 때마다 myref의 current 속성에 현재 해당되는 DOM 노드를 저장한다.
+	- ref 속성과 기능은 비슷하지만 useRef 훅은 클래스의 instance 필드를 사용하는 것과 유사하게 다양한 변수를 저장할 수 있다는 장점이 있다.
+	- 이런 것이 가능한 이유는 useRef 훅이 일반적인 자바스크립트 객체를 리턴하기 때문
+	
+	> 내가 직접 current 속성이 포함된 자바스크립트 객체를 만들어 쓴다면? 
+	- 물론 목적 달성은 가능할 수 있지만 useRef 훅을 사용하는 것과 직접 current 속성이 포함된 자바스크립트 객체를 만들어 사용하는 것의 차이점은 useRef 훅은 매번 렌더링이 될 때마다 항상 같은 레퍼런스 객체를 반환한다는 점이다.
+
+	> useRef 훅은 내부의 데이터가 변경되었을 때 별도로 알리지 않는다. 그래서 current 속성을 변경한다고 해서 재렌더링이 일어나진 않는다. 따라서 Ref에 DOM 노드가 연결되거나 분리되었을 경우에 어떤 코드를 실행하고 싶다면 콜백 레프(Callback ref)를 사용해야 한다.
+	- Callback ref : DOM 노드의 변화를 알기 위한 가장 기초적인 방법
+	- 리액트는 ref가 다른 노드에 연결될 때마다 callback을 호출하게 됨
+
+	- 예제. useRef() 가아닌 useCallback()을 사용하는 callback ref 방식
+	 	~ useRef 훅을 사용하게 되면 레퍼런스 객체가 current 속성이 변경되었는지를 따로 알려주지 않기 때문에 useCallback 훅 사용
+		~ Callback ref 방식을 사용하면 자식 컴포넌트가 변경되었을 때 알림을 받을 수 있고, 이를 통해 다른 정보들을 업데이트 할 수 있다.
+		
+		function MeasureExample(props) {
+			const [height, setHeight] = useState(0);
+
+			const measuredRef = useCallback(node => {
+				if (node !== null) {
+					setHeight(node.getBoundingClientRect().height);
+				}
+			}, []);
+
+			return (
+				<>
+					<h1 ref={measuredRef}>안녕, 리액트</h1>
+					<h2>위 헤더의 높이는 {Math.round(height)}px 입니다.</h2>
+				</>
+			);
+		}
+		=> 이 예제 코드에서는 h1 태그의 높이 값을 매번 업데이트하고 있음
+		그리고 useCallback 훅의 의존성 배열로 비어있는 배열을 넣어 h1 태그가 mount, unmount 될 때만 callback 함수가 호출되며 재렌더링 시에는 호출되지 않는다.
+
+22. 훅의 규칙
+	> 훅은 무조건 최상위 레벨에서만 호출해야 한다★
+	- 여기서 말하는 최상위 레벨은 리액트 함수 컴포넌트의 최상위 레벨
+	- 반복문이나 조건문 또는 중첨된 함수들 안에서 훅을 호출하면 안된다는 뜻
+	- 이 규칙에 따라 훅은 컴포넌트가 렌더링 될 때마다 매번 같은 순서로 호출되어야 한다.
+	- 이렇게 해야 리액트가 다수의 useState 훅과 useEffect 훅을 호출해서 컴포넌트의 state를 올바르게 관리할 수 있게 된다.
+
+	- 예제. 잘못된 훅 사용법
+		function MyComponent(props) {
+			const [name, setName] = useState('React');
+
+			if (name !== '') {
+				useeffect(() => {
+					...
+				});
+			}
+			...
+		}
+		=> 이 코드에서는 if문에 들어간 조건문의 값이 참인 경우에만 useEffect 훅을 호출하도록 되어 있음.
+		이런 경우 name의 값이 빈 문자열이 되면 조건문의 값이 false가 되어 useEffect 훅이 호출되지 않는다.
+		결과적으로 렌더링 할 때마다 훅이 같은 순서대로 호출되는 것이 아니라 조건문의 결과에 따라 호출되는 훅이 달라지는 잘못된 코드이다.
+
+	> 훅은 리액트 함수 컴포넌트에서만 호출해야 한다★
+	- 일반적인 JavaScript 함수에서 훅 호출 X
+	- 리액트 함수 컴포넌트에서 호출하거나 직접 만든 커스텀 훅에서만 호출할 수 있다.
+	- 이 규칙에 따라 리액트 컴포넌트에 있는 state와 관련된 모든 로직은 소스 코드를 통해 명확하게 확인이 가능해야 한다.
+
+	> eslint-plugin-react-hooks : 훅의 규칙을 따르도록 강제해주는 플러그인
+	- eslint는 JavaScript 코드에서 발견되는 문제 패턴을 식별하기 위한 정적 코드 분석 도구
+	- 이 플러그인을 사용하면 리액트 컴포넌트가 훅의 규칙을 따르는 지 아닌 지 분석할 수 있다.
+	- 의존성 배열이 잘못되어 있는 경우 자동으로 경고 표시를 해주며 고칠 방법을 제안
+	- https://www.npmjs.com/package/eslint-plugin-react-hooks
+
+23. Custom Hook
+	> 리액트에서 기본적으로 제공되는 훅 이외에 추가적으로 필요한 기능이 있다면 직접 훅을 만들어 사용할 수 있다.
+	> 여러 컴포넌트에서 반복적으로 사용되는 로직을 훅으로 만들어 재사용하기 위해서 만든다.
+
+	> 예제
+		
+ 
