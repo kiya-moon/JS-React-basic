@@ -12,6 +12,8 @@ import NotificationList from './chapter_06/NotificationList';
 import Accommodate from './chapter_07/Accommodate';
 import ConfirmButton_class from './chapter_08/Confirmbutton_class';
 import ConfirmButton_function from './chapter_08/Confirmbutton_function';
+import LandingPage from './chapter_09/LandingPage';
+import AttendanceBook from './chapter_10/AttendanceBook';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 // setInterval(() => {
@@ -23,7 +25,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 // }, 1000);
 root.render(
   <React.StrictMode>
-    <ConfirmButton_function />
+    <AttendanceBook />
   </React.StrictMode>
 );
 

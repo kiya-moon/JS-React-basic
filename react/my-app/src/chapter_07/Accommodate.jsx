@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import useCounter from "./useCounter";
+import useCounter from "./UseCounter";
 
 // useCounter 훅을 사용하여 카운트를 관리하는 컴포넌트
 
