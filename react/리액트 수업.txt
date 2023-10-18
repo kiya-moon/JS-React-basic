@@ -2695,16 +2695,16 @@ ex. const element = <h1>Hello, world!</h1>;
 		~ position 속성의 대표적인 값
 			div { position: static | fixed | relative | absolute; }
 
-			→ static
+			→ position: static;
 				기본값으로 element를 원래의 순서대로 위치시킴
 
-			→ fixed
+			→ position: fixed;
 				element를 브라우저 window에 상대적으로 위치시킴
 			
-			→ relative
+			→ position: relative;
 				element를 보통의 위치에 상대적으로 위치시킴
 
-			→ absolute
+			→ position: absolute;
 				element를 절대 위치에 위치시킴
 
 	> 가로, 세로 길이와 관련된 속성들
@@ -2726,9 +2726,366 @@ ex. const element = <h1>Hello, world!</h1>;
 	- https://www.w3schools.com/cssref/css_units.asp 참고
 
 	> Flexbox★ : 기존 CSS 레이아웃 사용의 불편한 부분을 개선하기 위해 등장
+	- Flexbox가 나오기 전에는 display-block이나 display-inline 등의 속성을 활용해서 레이아웃을 구성
+	- 이런 속성들은 다양한 레이아웃을 자유롭게 구성하는 데 불편한 부분이 있었고, 이러한 문제를 해결하기 위해 Flexbox가 나오게 됨
+	- Flexbox는 크게 컨테이너와 아이템으로 구성
+	- 위에서 display: flex;를 사용하면 엘리먼트가 flex container가 된다고 설명했는데, 그 flex container
+	- flex Container는 내부에 여러 개의 엘리먼트를 포함할 수 있음. 이때 컨테이너에 포함되는 엘리먼트들이 바로 Flexbox의 flex item이 된다
+	- 컨테이너 안에 여러 개의 아이템이 존재할 경우, 컨테이너에 들어있는 flex와 관련된 css 속성은 이 아이템들을 어떤 방향과 어떤 순서로 배치할 것인지를 정의하게 된다
+	- 가장 많이 사용되는 flex와 관련된 css 속성
+		div {
+			display: flex;
+			flex-direction: row | column | row-revers | column-reverse;
+			align-items: stretch | flex-start | center | flex-end | baseline;
+			justify-content: flex-start | center | felx-end | space-between | space-around;
+		}
+
+		~ 먼저 엘리먼트를 flex 컨테이너로 사용하기 위해서 display: flex;를 써주어야 한다★
+		그렇지 않으면 디스플레이 속성의 값이 flex가 아니고 엘리먼트의 기본 값으로 지정되기 때문
+
+		~ 이후에는 flex-direction 속성을 사용하여 아이템들이 어떤 방향으로 배치될 지 지정
+			→ flex-direction: row;
+				기본값. 아이템을 행(row)을 따라 가로 순서대로 왼쪽부터 배치
+
+			→ flex-direction: column;
+				아이템을 열(column)을 따라 세로 순서대로 위쪽부터 배치
+			
+			→ flex-direction: row-reverse;
+				아이템을 행(row)의 역(reverse)방향으로 오른쪽부터 배치
+
+			→ flex-direction: column-reverse;
+				아이템을 열(column)의 역(reverse)방향으로 아래쪽부터 배치
+
+		~ main axis와 cross axis : flex-direction 속성 값에 따라 아이템 배치와 관련된 두 개의 중요한 축
+			→ felx-direction으로 지정된 방향으로 향하는 축을 main axis
+			→ main axis를 가로지르는 축을 cross axis
+			→ main axis와 cross axis에 따라 align-items 속성과 justify-content 속성의 값의 의미가 달라진다
+
+		~ align-items : 컨테이너 내에서 아이템을 어떻게 정렬할 것인지를 결정. 이때 정렬 기준은 cross axis
+		~ align-items 속성의 대표적인 값들
+			→ align-tiems: stretch;
+				기본값. 아이템을 늘려서(stretch) 컨테이너를 가득 채움
+
+			→ align-tiems: flex-start;
+				cross axis의 시작 지점으로 아이템을 정렬
+
+			→ align-tiems: center;
+				cross axis의 중앙으로 아이템을 정렬
+
+			→ align-tiems: flex-end;
+				cross axis의 끝 지점으로 아이템을 정렬
+
+			→ align-tiems: baseline;
+				아이템을 baseline 기준으로 정렬
+
+		~ justify-content : 컨테이너 내에서 아이템들을 어떻게 나란히 맞출 것인지를 결정. 이때 기준은 main axis 
+			→ justify-content: flex-start;
+				main axis의 시작 지점으로 아이템을 맞춤
+
+			→ justify-content: center;
+				main axis의 중앙으로 아이템을 맞춤
+
+			→ justify-content: flex-end;
+				main axis의 끝 지점으로 아이템을 맞춤
+
+			→ justify-content: space-between;
+				main axis를 기준으로 첫 아이템은 시작 지점에 맞추고 마지막 아이템은 끝 지점에 맞추며, 중간에 있는 아이템들 사이(between)의 간격(space)이 일정하도록 맞춤
+
+			→ justify-content: space-around;
+				main axis를 기준으로 각 아이템의 주변(around) 간격(space)을 동일하게 맞춤 
+
+		~ https://www.w3schools.com/css/css3_flexbox.asp 참고
+
+	> Font와 관련된 속성
+	- font와 관련된 대표적인 속성
+		#title {
+			font-family: "사용할 글꼴 이름", <일반적인 글꼴 분류>;
+			font-size: value;
+			font-weight: normal | bold;
+			font-style: normal | italic | oblique;
+		}
+
+	- font-family
+		~ 어떤 글꼴을 사용할 것인지 결정하는 속성
+		~ 속성의 값으로는 사용할 글꼴의 이름을 적어주면 되는데, 여기서 주의할 점은 글꼴의 이름에 띄어쓰기가 들어갈 경우 큰 따옴표("")로 묶어주어야 함
+		~ 예제
+			#title1 {
+				font-family: "Times New Roman", Times, serif;
+			}
+
+			#title2 {
+				font-family: Arial, Verdana, sans-serif;
+			}
+
+			#title3 {
+				font-family: "Courier New", Monaco, monospace;
+			}
+
+			=> 사용할 글꼴의 이름이 하나가 아니라 콤마로 구분하여 여러 개의 이름이 쓰여있음(font-family 속성의 fallback system)
+			
+		~ fallback system
+			지정한 글꼴을 찾지 못했을 경우를 대비해서 후순위로 사용할 글꼴을 지정해주는 것
+			최대한 많은 브라우저와 운영체제에서 글자가 깨지지 않고 나올 수 있도록 하기 위함이다
+			가장 마지막에 쓰여 있는 것은 일반적인 글꼴 분류(Generic Font Family)인데, 모든 글꼴은 여기에 나와 있는 일반적인 글꼴 분류 중 한 가지에 속한다
+			가장 마지막에 일반적인 글꼴 분류를 기재하는 것은, 지정한 글꼴을 모두 찾지 못했을 때 분류에서 가장 유사한 글꼴을 선택하도록 하기 위해서이다
+
+			일반적인 글꼴 분류(Generic font family)
+			→ serif
+				각 글자의 모서리에 작은 테두리를 갖고 있는 형태의 글꼴
+			
+			→ sans-serif
+				모서리에 테두리가 없이 깔끔한 선을 가진 글꼴
+				컴퓨터 모니터에서는 serif보다 가독성이 좋음
+
+			→ monospace
+				모든 글자가 같은 가로 길이를 가지는 글꼴. 코딩을 할 때 주로 사용
+			
+			→ cursive
+				사람이 쓴 손글씨 모양의 글꼴
+
+			→ fantasy
+				장식이 들어간 형태의 글꼴
+
+	- font-size
+		~ 글꼴 크기와 관련된 속성
+		~ px(pixel), em, rem, vw(viewport width) 등		
+		~ pixel은 고정된 값이기 때문에 브라우저를 통해 크기를 바꿀 수 없지만, em은 사용자가 브라우저에서 글꼴의 크기를 변경할 수 있게 해준다(반응형) 
+
+		~ 16 * em = pixels
+		~ 브라우저의 기본 글꼴 크기 1em은 16픽셀과 동일
+
+		~ 예제
+			#title1 {
+				font-size: 16px;
+			}
+
+			#title2 {
+				font-size: 1em;
+			}
+
+			#title3 {
+				font-size: 10vw;	/* viewport(현재 보고있는 컴퓨터의 화면 영역) 가로 길이의 10%를 의미 */
+			}
+
+	- font-weight
+		~ 글꼴의 두께와 관련된 속성
+		~ 값으로는 normal, bold를 사용하거나 100에서 900까지의 100 단위 숫자로 된 값 사용
+		~ 숫자가 클수록 글자의 두께가 두꺼워진다
+
+		~ 예제
+			#title1 {
+				font-weight: bold;
+			}
+
+			#title2 {
+				font-weight: 500;
+			}
+
+	- font-style
+		~ 글꼴의 스타일을 지정하기 위한 속성
+		~ font-style 속성의 값들
+			→ font-style: normal;
+				일반적인 글자의 형태를 의미
+
+			→ font-style: italic;
+				글자가 기울어진 형태로 나타남
+				별도로 기울어진 형태의 글자들을 직접 디자인해서 만든 것(italic체)
+				때문에 italic을 사용할 경우에는 해당 글꼴이 italic을 지원하는 지를 확인한 뒤에 사용해야 한다
+			
+			→ font-style: oblique
+				글자가 비스듬한 형태로 나타남
+				그냥 글자를 기울인 것
+
+		~ 예제
+			#title1 {
+				font-style: italic;
+			}
+
+			#title2 {
+				fonst-style: oblique;
+			}
+
+	> 기타 많이 사용되는 속성
+	- background-color
+		~ 엘리먼트의 배경색을 지정하기 위한 속성
+			div {
+				background-color: color | transparent;
+			}
+
+		~ 값으로는 색상의 값이 들어간다(보통 16진수 컬러 값이나 미리 정의된 색상의 이름을 사용)
+			→ 16진수 컬러 값 : #ff0000
+			→ 투명도를 가진 16진수 컬러 값 : #ff000055
+			→ RGB 컬러 값 : rgb(255, 0, 0)
+			→ RGBA 컬러 값 : rgba(255, 0, 0, 0.5)
+			→ HSL 컬러 값 : hsl(120, 100%, 25%)
+			→ HSLA 컬러 값 : hsla(120, 100%, 50%, 0.3)
+			→ 미리 정의된 색상의 이름 : red
+			→ currentcolor 키워드 : 현재 지정된 색상 값을 사용
 	
+		~ transparent는 배경색을 투명하게 만들고 싶을 경우에 사용
 
+	- border
+		~ 테두리를 위한 속성
+			div{
+				border: border-width border-style border-color;
+			}
+			=> 3가지 속성을 축약시켜서 한 번에 사용할 수 있게 만듦
 
+		~ 각 속성을 사용하여 테두리의 두께, 스타일, 색상을 지정할 수 있고 border 속성을 사용해서 한 번에 지정할 수도 있다
+
+		~ 예제
+			#section1 {
+				backgournd-color: red;
+			}
+
+			#section2 {
+				border: 1px solid black;
+			}
+	
+	> 그 외 https://www.w3schools.com/cssref/default.asp 참고
 		
+39. styled-components
+	> styled-components는 css 문법을 그대로 사용하면서 결과물을 스타일링된 컴포넌트 형태로 만들어주는 오픈소스 라이브러리
+	> 컴포넌트 개념을 사용하기 때문에 React와 굉장히 궁합이 잘 맞으며, 전세계적으로 React 개발에 많이 사용되고 있음
 
+	> styled-components 설치
+	- npm을 사용하는 경우
+		npm install --save styled-components
+	- yarn을 사용하는 경우 
+		yarn add syled-components
+
+	> styled-components 기본 사용법
+	- styled-components는 tagged template literal을 사용하여 구성요소의 스타일을 지정 (template literal을 사용하여 CSS 속성이 적용된 React 컴포넌트를 만듦)
+
+	- literal : 프로그래밍에서 literal은 소스 코드에 고정된 값을 의미 ex. let number = 20; < 여기서 20이 literal 
+
+		~ 여러 가지 종류의 literal
+			// 정수 리터럴 (Integer literal)
+			const myNumber = 10;
+
+			// 문자열 리터럴 (String literal)
+			const myStr = 'Hello';
+
+			// 배열 리터럴 (Array literal)
+			const myArray = [];
+
+			// 객체 리터럴 (Object literal)
+			const myObject = {};
+
+			=> cosnt를 사용한 상수. 여기서 대입연산자의 오른쪽에 있는 값들이 literal
+
+	- template literal
+		~ literal을 template 형태로 사용하는 자바스크립트 문법
+		~ backticks(``)를 사용하여 문자열을 작성하고 그 안에 대체 가능한 expression을 넣는다
+		~ 여기서 이 expression을 대체라는 듯을 가진 substitution이라고 부른다
+
+		~ 크게 Untagged Template Literal과 Tagged Template Literal로 나뉨
+			→ Untagged template literal
+				// 단순한 문자열
+				`string text`
+
+				// 여러 줄(Multi-line)에 걸친 문자열
+				`string text line 1
+				string text line2`
+
+				// 대체 가능한 expression이 들어있는 문자열
+				`string text ${expression} string text`
+
+
+			→ Tagged template literal
+				// myFunction의 파라미터로 expression으로 구분된 문자열 배열과 expression이 순서대로 들어간 형태로 호출됨
+				myFunction `string text ${expression} string text`;
+
+		~ 예제. Tagged template literal 사용
+			const name = '리액트';
+			const region = '성수';
+
+			function myTagFunction(strings, nameExp, regionExp) {
+				let str0 = strings[0];	// "제 이름은 "
+				let str1 = strings[1];	// "이고, 사는 곳은 "
+				let str2 = strings[2];	// "입니다."
+
+				// 여기에서도 template literal을 사용하여 리턴할 수 있음
+				return `${str0}${nameExp}${str1}${regionExp}${str2}`;
+			}
+
+			const output = myTagFunction `제 이름은 ${name}이고, 사는 곳은 ${region}입니다.`;
+
+			// 출력 결과
+			// 제 이름은 리액트이고, 사는 곳은 성수 입니다.
+			console.log(output);
+
+		~ 참고 : https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals
+
+	- styled-components 사용 방법
+		~ backticks로 둘러싸인 문자열 부분에 CSS 속성을 넣고 태그 함수 위치에는 styled.html 태그 형태로 사용
+
+		~ 예제
+			import React from "react";
+			import styled from "styled-components";
+
+			const Wrapper = styled.div`
+				padding: 1em;
+				background: grey;
+			`;
+
+	- styled-components에서 props 사용하기
+		~ 조건이나 동적으로 변하는 값을 사용해서 스타일링 하는 방법
+		~ 여기서 props는 리액트 컴포넌트의 props와 같은 개념
+
+		~ 예제
+			// styled-components를 사용해서 만들어진 컴포넌트
+			import React from "react";
+			import styled from "styled-components";
+
+			const Button = styled.button`
+				color: ${props => props.dark ? "white" : "dark"};
+				background: ${props => props.dark ? "black" : "white"};
+				border: 1px solid black;
+			`;
+
+			function Sample(props) {
+				return (
+					<div>
+						<Button>Normal</Button>
+						// props(dark)는 그대로 styled-components에 전달된다
+						<Button dark>Dark</Button>
+				);
+			}
+	
+			exprot default Sample;
+
+	- styled-components의 스타일 확장하기
+		~ styled-components를 사용하여 생성한 react 컴포넌트를 기반으로 추가적인 스타일을 적용하고 싶을 경우를 위해, styled-components에서는 확장 기능을 제공
+
+		~ 예제
+			import React from "react";
+			improt styled from 'styled-components';
+
+			// Button 컴포넌트
+			// HTML의 버튼 태그를 기반으로 만들어진 단순한 버튼
+			const Button = styled.button`
+				color: grey;
+				border: 2px solid palevioletred;
+			`;
+
+			// Buttons에 style이 추가된 RoundedButton 컴포넌트
+			// HTML 태그 대신 Button 컴포넌트가 괄호로 둘러싸인 채 들어가 있음
+			// 즉, RoundedButton 컴포넌트는 Button 컴포넌트의 버튼의 모서리를 둥글게 만든 컴포넌트
+			const RoundedButton = styled(Button)`
+				border-radius: 16px;
+			`;
+
+			function Sample(props) {
+				return (
+					<div>
+						<Button>Normal</Button>
+						<RoundedButton>Rounded</RoundedButton>
+					</div>
+				);
+			}
+
+			export default Sample;
+	
+	- 참고. https://styled-components.com/docs
 
