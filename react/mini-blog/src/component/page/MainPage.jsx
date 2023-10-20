@@ -8,7 +8,6 @@ import styled from "styled-components";
 import PostList from "../list/PostList";
 import Button from "../ui/Button";
 import data from '../../data.json';
-import { isHtmlElement } from "react-router-dom/dist/dom";
 
 const Wrapper = styled.div`
     padding: 16px;
@@ -31,8 +30,6 @@ const Container = styled.div`
 `;
 
 function MainPage(props) {
-    const {} = props;
-
     const navigate = useNavigate();
 
     return(
@@ -48,7 +45,7 @@ function MainPage(props) {
 
                 <PostList
                     posts={data}
-                    onclickItem={(item) => {
+                    onClickItem={(item) => {
                         navigate(`/post/${item.id}`);
                     }}
                 />

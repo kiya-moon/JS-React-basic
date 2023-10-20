@@ -1,6 +1,5 @@
 // 보통 사용자에게 입력받을 때 input 태그를 사용하지만
 // 블로그에서는 여러 줄에 걸친 텍스트를 받아야 하기 때문에 textarea 태그 사용
-import { prependOnceListener } from "process";
 import React from "react";
 import styled from "styled-components";
 
